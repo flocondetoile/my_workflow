@@ -1,0 +1,14 @@
+services:
+  my_workflow.publication_guard:
+    class: Drupal\my_workflow\Guard\PublicationGuard
+    arguments: ['@current_user', '@plugin.manager.workflow']
+    tags:
+      - { name: state_machine.guard, group: publication }
+  my_workflow.workflow.helper:
+    class: Drupal\my_workflow\WorkflowHelper
+    arguments: ['@current_user']
+  my_workflow.workflow_transition:
+    class: Drupal\my_workflow\EventSubscriber\WorkflowTransitionEventSubscriber
+    arguments: ['@my_workflow.workflow.helper']
+    tags:
+      - { name: event_subscriber }

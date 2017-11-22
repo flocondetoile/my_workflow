@@ -1,0 +1,105 @@
+publication_default:
+  id: publication_default
+  label: Default publication
+  group: publication
+  states:
+    new:
+      label: New
+    draft:
+      label: Draft
+    proposed:
+      label: Proposed
+    validated:
+      label: Validated
+      published: true
+    needs_update:
+      label: Needs update
+    archived:
+      label: Archived
+      archived: true
+  transitions:
+    save_as_draft:
+      label: Save as draft
+      from: [new, draft, needs_update]
+      to: draft
+    save_new_draft:
+      label: Save new draft
+      from: [validated]
+      to: draft
+    propose:
+      label: Propose
+      from: [new, draft, needs_update]
+      to: proposed
+    update_proposed:
+      label: Update
+      from: [proposed]
+      to: proposed
+    validate:
+      label: Publish
+      from: [new, draft, proposed]
+      to: validated
+    update_validated:
+      label: Update
+      from: [validated]
+      to: validated
+    needs_update:
+      label: Request changes
+      from: [proposed, validated]
+      to: needs_update
+    unarchive:
+      label: Unarchive
+      from: [archived]
+      to: draft
+    archive:
+      label: Archive
+      from: [validated]
+      to: archived
+
+technic_default:
+  id: technic_default
+  label: Default technic
+  group: technic
+  states:
+    new:
+      label: New
+    draft:
+      label: Draft
+    need_review:
+      label: Need review
+      notify_role: technic
+      notify_users: field_notify_users
+    validated:
+      label: Validated
+      notify_owner: true
+    need_update:
+      label: Need update
+      notify_owner: true
+  transitions:
+    save_as_draft:
+      label: Save as draft
+      from: [new, draft, need_review, validated, need_update]
+      to: draft
+    ask_review:
+      label: Ask review
+      from: [new, draft, need_update]
+      to: need_review
+    update_need_review:
+      label: Update review
+      from: [need_review]
+      to: need_review
+    update_need_update:
+      label: Stay in need update
+      from: [need_update]
+      to: need_update
+    validate:
+      label: Validate
+      from: [new, draft, need_review, need_update]
+      to: validated
+    update_validated:
+      label: Update validated
+      from: [validated]
+      to: validated
+    need_update:
+      label: Request changes
+      from: [need_review, validated]
+      to: need_update

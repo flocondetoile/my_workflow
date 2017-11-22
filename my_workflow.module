@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Contains my_workflow.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+
+/**
+ * Implements hook_help().
+ */
+function my_workflow_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the my_workflow module.
+    case 'help.page.my_workflow':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provide custom workflow for state machine') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function my_workflow_theme() {
+  return [
+    'my_workflow' => [
+      'template' => 'my_workflow',
+      'render element' => 'children',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function my_workflow_node_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+  /** @var \Drupal\state_machine\WorkflowManager $workflow_manager */
+  $workflow_manager = \Drupal::service('plugin.manager.workflow');
+  $transitions = $workflow_manager->getGroupedLabels('node');
+  $test = $workflow_manager->getDefinitions();
+  if ($transitions) {
+
+  }
+}
+
+
+/**
+ * Implements hook_entity_create().
+ */
+function my_workflow_entity_insert(EntityInterface $entity) {
+  // Set the publication state when creating an entity that uses workflow.
+  if ($entity instanceof EntityPublishedInterface && $entity instanceof FieldableEntityInterface) {
+    /** @var \Drupal\my_workflow\WorkflowHelperInterface $workflow_helper */
+    $workflow_helper = \Drupal::service('my_workflow.workflow.helper');
+    if ($workflow_helper->hasEntityStateField($entity)) {
+      $state_field = $workflow_helper->getEntityStateField($entity);
+      $workflow = $state_field->getWorkflow();
+      $state_id = $state_field->getValue()['value'];
+      if ($workflow_helper->isWorkflowStatePublished($state_id, $workflow)) {
+        $entity->setPublished();
+      }
+      else {
+        $entity->setUnpublished();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function my_workflow_ENTITY_TYPE_access(EntityInterface $entity, $operation, AccountInterface $account) {
+
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function my_workflow_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+
+}
+

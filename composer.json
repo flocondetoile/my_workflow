@@ -1,0 +1,14 @@
+{
+  "name": "drupal/my_workflow",
+  "type": "drupal-module",
+  "description": "Provide custom workflow for state machine",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/my_workflow",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/my_workflow",
+    "source": "http://cgit.drupalcode.org/my_workflow"
+  },
+  "require": { }
+}

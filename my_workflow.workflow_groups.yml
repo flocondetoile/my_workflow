@@ -1,0 +1,6 @@
+publication:
+  label: Publication
+  entity_type: node
+technic:
+  label: Technic
+  entity_type: node

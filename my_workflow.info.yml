@@ -1,0 +1,7 @@
+name: My workflow
+type: module
+description: Provide custom workflow for state machine
+core: 8.x
+package: Custom
+dependencies:
+  - state_machine
